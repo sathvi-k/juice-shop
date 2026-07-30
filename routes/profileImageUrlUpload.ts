@@ -12,11 +12,17 @@ import * as security from '../lib/insecurity'
 import { UserModel } from '../models/user'
 import * as utils from '../lib/utils'
 import logger from '../lib/logger'
+import rateLimit from 'express-rate-limit'
+
+export const profileImageUrlUploadRateLimit = rateLimit({
+  windowMs: 10 * 60 * 1000,
+  max: 100
+})
 
 export function profileImageUrlUpload () {
   return async (req: Request, res: Response, next: NextFunction) => {
     if (req.body.imageUrl !== undefined) {
-      const url = req.body.imageUrl
+      const url = String(req.body.imageUrl)
       if (url.match(/(.)*solve\/challenges\/server-side(.)*/) !== null) req.app.locals.abused_ssrf_bug = true
       const loggedInUser = security.authenticatedUsers.get(req.cookies.token)
       if (loggedInUser) {

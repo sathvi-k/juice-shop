@@ -60,6 +60,7 @@ export const retrieveChallengesWithCodeSnippet = async () => {
 
 export const getVerdict = (vulnLines: number[], neutralLines: number[], selectedLines: number[]) => {
   if (selectedLines === undefined) return false
+  if (!Array.isArray(selectedLines)) return false
   if (vulnLines.length > selectedLines.length) return false
   if (!vulnLines.every(e => selectedLines.includes(e))) return false
   const okLines = [...vulnLines, ...neutralLines]
@@ -83,7 +84,7 @@ export const checkVulnLines = () => async (req: Request<Record<string, unknown>,
   }
   const vulnLines: number[] = snippetData.vulnLines
   const neutralLines: number[] = snippetData.neutralLines
-  const selectedLines: number[] = req.body.selectedLines
+  const selectedLines: number[] = Array.isArray(req.body.selectedLines) ? req.body.selectedLines : []
   const verdict = getVerdict(vulnLines, neutralLines, selectedLines)
   let hint
   if (fs.existsSync('./data/static/codefixes/' + key + '.info.yml')) {

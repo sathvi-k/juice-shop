@@ -74,7 +74,7 @@ describe('/chatbot', () => {
     it('Asks for username if not defined', async () => {
       const { token } = await login({
         email: `J12934@${config.get<string>('application.domain')}`,
-        password: '0Y8rMnww$*9VFYE§59-!Fg1L6t&6lB'
+        password: process.env.J12934_PASSWORD ?? ''
       })
 
       const testCommand = trainingData.data[0].utterances[0]

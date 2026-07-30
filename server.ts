@@ -22,6 +22,7 @@ import compression from 'compression'
 // @ts-expect-error FIXME due to non-existing type definitions for express-robots-txt
 import robots from 'express-robots-txt'
 import cookieParser from 'cookie-parser'
+import csrf from 'csurf'
 import * as Prometheus from 'prom-client'
 import swaggerUi from 'swagger-ui-express'
 import featurePolicy from 'feature-policy'
@@ -287,6 +288,7 @@ restoreOverwrittenFilesWithOriginals().then(() => {
 
   app.use(express.static(path.resolve('frontend/dist/frontend')))
   app.use(cookieParser('kekse'))
+  app.use(csrf({ cookie: true }))
   // vuln-code-snippet end directoryListingChallenge accessLogDisclosureChallenge
 
   /* Configure and enable backend-side i18n */
@@ -400,8 +402,8 @@ restoreOverwrittenFilesWithOriginals().then(() => {
   app.post('/api/Feedbacks', verify.captchaBypassChallenge())
   /* User registration challenge verifications before finale takes over */
   app.post('/api/Users', (req: Request, res: Response, next: NextFunction) => {
-    if (req.body.email !== undefined && req.body.password !== undefined && req.body.passwordRepeat !== undefined) {
-      if (req.body.email.length !== 0 && req.body.password.length !== 0) {
+    if (typeof req.body.email === 'string' && typeof req.body.password === 'string' && typeof req.body.passwordRepeat === 'string') {
+      if (typeof req.body.email === 'string' && typeof req.body.password === 'string' && typeof req.body.passwordRepeat === 'string' && req.body.email.length !== 0 && req.body.password.length !== 0) {
         req.body.email = req.body.email.trim()
         req.body.password = req.body.password.trim()
         req.body.passwordRepeat = req.body.passwordRepeat.trim()

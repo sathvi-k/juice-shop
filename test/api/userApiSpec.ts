@@ -42,7 +42,7 @@ describe('/api/Users', () => {
       headers: jsonHeader,
       body: {
         email: 'horst@horstma.nn',
-        password: 'hooooorst'
+        password: process.env.TEST_USER_PASSWORD
       }
     })
       .expect('status', 201)
@@ -60,7 +60,7 @@ describe('/api/Users', () => {
       headers: jsonHeader,
       body: {
         email: 'horst2@horstma.nn',
-        password: 'hooooorst',
+        password: process.env.TEST_USER_PASSWORD,
         role: 'admin'
       }
     })
@@ -136,7 +136,7 @@ describe('/api/Users', () => {
       headers: jsonHeader,
       body: {
         email: 'horst3@horstma.nn',
-        password: 'hooooorst',
+        password: process.env.TEST_USER_PASSWORD,
         role: 'deluxe'
       }
     })
@@ -158,7 +158,7 @@ describe('/api/Users', () => {
       headers: jsonHeader,
       body: {
         email: 'horst4@horstma.nn',
-        password: 'hooooorst',
+        password: process.env.TEST_USER_PASSWORD,
         role: 'accounting'
       }
     })
@@ -180,7 +180,7 @@ describe('/api/Users', () => {
       headers: jsonHeader,
       body: {
         email: 'horst5@horstma.nn',
-        password: 'hooooorst',
+        password: process.env.TEST_USER_PASSWORD,
         role: 'accountinguser'
       }
     })
@@ -199,7 +199,7 @@ describe('/api/Users', () => {
         headers: jsonHeader,
         body: {
           email: '<iframe src="javascript:alert(`xss`)">',
-          password: 'does.not.matter'
+          password: process.env.TEST_USER_PASSWORD
         }
       })
         .expect('status', 201)
@@ -253,7 +253,7 @@ describe('/rest/user/whoami', () => {
       headers: jsonHeader,
       body: {
         email: 'bjoern.kimminich@gmail.com',
-        password: 'bW9jLmxpYW1nQGhjaW5pbW1pay5ucmVvamI='
+        password: process.env.TEST_USER_PASSWORD
       }
     })
       .expect('status', 200)
@@ -299,7 +299,7 @@ describe('/rest/user/whoami', () => {
   })
 
   it('GET who-am-i request returns nothing on expired auth token', () => {
-    return frisby.get(`${REST_URL}/user/whoami`, { headers: { Authorization: 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdGF0dXMiOiJzdWNjZXNzIiwiZGF0YSI6eyJpZCI6MSwidXNlcm5hbWUiOiIiLCJlbWFpbCI6ImFkbWluQGp1aWNlLXNoLm9wIiwicGFzc3dvcmQiOiIwMTkyMDIzYTdiYmQ3MzI1MDUxNmYwNjlkZjE4YjUwMCIsInJvbGUiOiJhZG1pbiIsImxhc3RMb2dpbklwIjoiMC4wLjAuMCIsInByb2ZpbGVJbWFnZSI6ImRlZmF1bHQuc3ZnIiwidG90cFNlY3JldCI6IiIsImlzQWN0aXZlIjp0cnVlLCJjcmVhdGVkQXQiOiIyMDE5LTA4LTE5IDE1OjU2OjE1LjYyOSArMDA6MDAiLCJ1cGRhdGVkQXQiOiIyMDE5LTA4LTE5IDE1OjU2OjE1LjYyOSArMDA6MDAiLCJkZWxldGVkQXQiOm51bGx9LCJpYXQiOjE1NjYyMzAyMjQsImV4cCI6MTU2NjI0ODIyNH0.FL0kkcInY5sDMGKeLHfEOYDTQd3BjR6_mK7Tcm_RH6iCLotTSRRoRxHpLkbtIQKqBFIt14J4BpLapkzG7ppRWcEley5nego-4iFOmXQvCBz5ISS3HdtM0saJnOe0agyVUen3huFp4F2UCth_y2ScjMn_4AgW66cz8NSFPRVpC8g' } })
+    return frisby.get(`${REST_URL}/user/whoami`, { headers: { Authorization: process.env.EXPIRED_AUTH_TOKEN ?? '' } })
       .expect('status', 200)
       .expect('header', 'content-type', /application\/json/)
       .expect('json', {

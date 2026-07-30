@@ -1,6 +1,6 @@
 describe('/chatbot', () => {
   beforeEach(() => {
-    cy.login({ email: 'admin', password: 'admin123' })
+    cy.login({ email: 'admin', password: Cypress.env('ADMIN_PASSWORD') })
   })
 
   describe('challenge "killChatbot"', () => {

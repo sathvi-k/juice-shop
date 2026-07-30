@@ -55,14 +55,15 @@ describe('TwoFactorAuthServiceService', () => {
   it('should set up 2FA directly via the rest api', inject([TwoFactorAuthService, HttpTestingController],
     fakeAsync((service: TwoFactorAuthService, httpMock: HttpTestingController) => {
       let res: any
-      service.setup('s3cr3t!', 'initialToken', 'setupToken').subscribe((data) => (res = data))
+      const testPassword = process.env.TEST_PASSWORD ?? ''
+      service.setup(testPassword, 'initialToken', 'setupToken').subscribe((data) => (res = data))
 
       const req = httpMock.expectOne('http://localhost:3000/rest/2fa/setup')
       req.flush({})
       tick()
 
       expect(req.request.method).toBe('POST')
-      expect(req.request.body).toEqual({ password: 's3cr3t!', initialToken: 'initialToken', setupToken: 'setupToken' })
+      expect(req.request.body).toEqual({ password: testPassword, initialToken: 'initialToken', setupToken: 'setupToken' })
       expect(res).toBe(undefined)
       httpMock.verify()
     })
@@ -71,14 +72,15 @@ describe('TwoFactorAuthServiceService', () => {
   it('should disable 2FA directly via the rest api', inject([TwoFactorAuthService, HttpTestingController],
     fakeAsync((service: TwoFactorAuthService, httpMock: HttpTestingController) => {
       let res: any
-      service.disable('s3cr3t!').subscribe((data) => (res = data))
+      const testPassword = process.env.TEST_PASSWORD ?? ''
+      service.disable(testPassword).subscribe((data) => (res = data))
 
       const req = httpMock.expectOne('http://localhost:3000/rest/2fa/disable')
       req.flush({})
       tick()
 
       expect(req.request.method).toBe('POST')
-      expect(req.request.body).toEqual({ password: 's3cr3t!' })
+      expect(req.request.body).toEqual({ password: testPassword })
       expect(res).toBe(undefined)
       httpMock.verify()
     })

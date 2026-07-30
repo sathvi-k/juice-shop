@@ -11,6 +11,7 @@ import fs from 'node:fs'
 
 const jsonHeader = { 'content-type': 'application/json' }
 const REST_URL = 'http://localhost:3000/rest'
+const TEST_PASSWORD = process.env.TEST_PASSWORD ?? ''
 
 describe('/rest/memories', () => {
   it('GET memories via public API', () => {
@@ -23,7 +24,7 @@ describe('/rest/memories', () => {
       headers: jsonHeader,
       body: {
         email: 'jim@' + config.get<string>('application.domain'),
-        password: 'ncc-1701'
+        password: TEST_PASSWORD
       }
     })
       .expect('status', 200)
@@ -61,7 +62,7 @@ describe('/rest/memories', () => {
       headers: jsonHeader,
       body: {
         email: 'jim@' + config.get<string>('application.domain'),
-        password: 'ncc-1701'
+        password: TEST_PASSWORD
       }
     })
       .expect('status', 200)
@@ -83,7 +84,7 @@ describe('/rest/memories', () => {
       headers: jsonHeader,
       body: {
         email: 'jim@' + config.get<string>('application.domain'),
-        password: 'ncc-1701'
+        password: TEST_PASSWORD
       }
     })
       .expect('status', 200)
@@ -109,7 +110,7 @@ describe('/rest/memories', () => {
       headers: jsonHeader,
       body: {
         email: 'jim@' + config.get<string>('application.domain'),
-        password: 'ncc-1701'
+        password: TEST_PASSWORD
       }
     })
       .expect('status', 200)
@@ -139,7 +140,7 @@ describe('/rest/memories', () => {
       headers: jsonHeader,
       body: {
         email: 'jim@' + config.get<string>('application.domain'),
-        password: 'ncc-1701'
+        password: TEST_PASSWORD
       }
     })
       .expect('status', 200)

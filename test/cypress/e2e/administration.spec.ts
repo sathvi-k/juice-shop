@@ -1,8 +1,8 @@
 describe('/#/administration', () => {
   beforeEach(() => {
     cy.login({
-      email: 'admin',
-      password: 'admin123'
+      email: Cypress.env('ADMIN_EMAIL'),
+      password: Cypress.env('ADMIN_PASSWORD')
     })
   })
   describe('challenge "adminSection"', () => {

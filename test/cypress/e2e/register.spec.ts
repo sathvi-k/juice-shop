@@ -7,7 +7,7 @@ describe('/#/register', () => {
     beforeEach(() => {
       cy.login({
         email: 'admin',
-        password: 'admin123'
+        password: Cypress.env('ADMIN_PASSWORD')
       })
     })
 
@@ -81,7 +81,7 @@ describe('/#/register', () => {
           },
           body: JSON.stringify({
             email: 'uncle@bob.com',
-            password: 'ThereCanBeOnlyOne'
+            password: Cypress.env('REGISTER_PASSWORD')
           })
         })
         if (response.status === 201) {

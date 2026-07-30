@@ -83,7 +83,7 @@ export const checkVulnLines = () => async (req: Request<Record<string, unknown>,
   }
   const vulnLines: number[] = snippetData.vulnLines
   const neutralLines: number[] = snippetData.neutralLines
-  const selectedLines: number[] = req.body.selectedLines
+  const selectedLines: number[] = Array.isArray(req.body.selectedLines) ? req.body.selectedLines : []
   const verdict = getVerdict(vulnLines, neutralLines, selectedLines)
   let hint
   if (fs.existsSync('./data/static/codefixes/' + key + '.info.yml')) {

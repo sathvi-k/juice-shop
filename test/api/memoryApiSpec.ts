@@ -23,7 +23,7 @@ describe('/rest/memories', () => {
       headers: jsonHeader,
       body: {
         email: 'jim@' + config.get<string>('application.domain'),
-        password: 'ncc-1701'
+        password: process.env.JIM_PASSWORD
       }
     })
       .expect('status', 200)
@@ -61,7 +61,7 @@ describe('/rest/memories', () => {
       headers: jsonHeader,
       body: {
         email: 'jim@' + config.get<string>('application.domain'),
-        password: 'ncc-1701'
+        password: process.env.JIM_PASSWORD
       }
     })
       .expect('status', 200)
@@ -83,7 +83,7 @@ describe('/rest/memories', () => {
       headers: jsonHeader,
       body: {
         email: 'jim@' + config.get<string>('application.domain'),
-        password: 'ncc-1701'
+        password: process.env.JIM_PASSWORD
       }
     })
       .expect('status', 200)
@@ -109,7 +109,7 @@ describe('/rest/memories', () => {
       headers: jsonHeader,
       body: {
         email: 'jim@' + config.get<string>('application.domain'),
-        password: 'ncc-1701'
+        password: process.env.JIM_PASSWORD
       }
     })
       .expect('status', 200)
@@ -139,7 +139,7 @@ describe('/rest/memories', () => {
       headers: jsonHeader,
       body: {
         email: 'jim@' + config.get<string>('application.domain'),
-        password: 'ncc-1701'
+        password: process.env.JIM_PASSWORD
       }
     })
       .expect('status', 200)

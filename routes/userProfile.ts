@@ -15,6 +15,7 @@ import { challenges } from '../data/datacache'
 import * as security from '../lib/insecurity'
 import { UserModel } from '../models/user'
 import * as utils from '../lib/utils'
+import sanitizeHtml from 'sanitize-html'
 
 const entities = new Entities()
 
@@ -95,7 +96,13 @@ export function getUserProfile () {
         'Content-Security-Policy': CSP
       })
 
-      res.send(fn(user))
+      const rendered = fn(user)
+      const safeRendered = sanitizeHtml(rendered, {
+        allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img', 'html', 'head', 'body', 'link', 'meta', 'title', 'style', 'script', 'form', 'input', 'button', 'label', 'span', 'div', 'nav', 'header', 'footer', 'main', 'section']),
+        allowedAttributes: false,
+        allowedSchemes: ['http', 'https', 'data', 'mailto']
+      })
+      res.send(safeRendered)
     } catch (err) {
       next(new Error('Blocked illegal activity by ' + req.socket.remoteAddress))
     }

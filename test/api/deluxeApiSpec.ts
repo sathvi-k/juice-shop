@@ -50,7 +50,7 @@ describe('/rest/deluxe-membership', () => {
       headers: jsonHeader,
       body: {
         email: 'ciso@' + config.get<string>('application.domain'),
-        password: 'mDLx?94T~1CfVfZMzw@sJ9f?s3L6lbMqE70FfI8^54jbNikY5fymx7c!YbJb'
+        password: process.env.CISO_PASSWORD
       }
     })
       .expect('status', 200)
@@ -146,7 +146,7 @@ describe('/rest/deluxe-membership', () => {
       headers: jsonHeader,
       body: {
         email: 'ciso@' + config.get<string>('application.domain'),
-        password: 'mDLx?94T~1CfVfZMzw@sJ9f?s3L6lbMqE70FfI8^54jbNikY5fymx7c!YbJb'
+        password: process.env.CISO_PASSWORD
       }
     })
       .expect('status', 200)

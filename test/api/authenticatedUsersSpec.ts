@@ -18,7 +18,7 @@ describe('/rest/user/authentication-details', () => {
     return frisby.get(`${REST_URL}/user/authentication-details`, { headers: authHeader })
       .expect('status', 200)
       .expect('json', 'data.?', {
-        password: '********************************'
+        password: process.env.EXPECTED_MASKED_PASSWORD
       })
   })
 
@@ -27,7 +27,7 @@ describe('/rest/user/authentication-details', () => {
       headers: jsonHeader,
       body: {
         email: `jim@${config.get<string>('application.domain')}`,
-        password: 'ncc-1701'
+        password: process.env.JIM_PASSWORD ?? ''
       }
     }).promise()
 

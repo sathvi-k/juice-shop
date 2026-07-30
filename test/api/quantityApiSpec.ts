@@ -35,7 +35,7 @@ describe('/api/Quantitys', () => {
       headers: jsonHeader,
       body: {
         email: `admin@${config.get<string>('application.domain')}`,
-        password: 'admin123'
+        password: process.env.ADMIN_PASSWORD
       }
     })
       .expect('status', 200)
@@ -90,7 +90,7 @@ describe('/api/Quantitys', () => {
       headers: jsonHeader,
       body: {
         email: `admin@${config.get<string>('application.domain')}`,
-        password: 'admin123'
+        password: process.env.ADMIN_PASSWORD
       }
     })
       .expect('status', 200)
@@ -152,7 +152,7 @@ describe('/api/Quantitys/:ids', () => {
       headers: jsonHeader,
       body: {
         email: `admin@${config.get<string>('application.domain')}`,
-        password: 'admin123'
+        password: process.env.ADMIN_PASSWORD
       }
     })
       .expect('status', 200)
@@ -306,7 +306,7 @@ describe('/api/Quantitys/:ids', () => {
       headers: jsonHeader,
       body: {
         email: `admin@${config.get<string>('application.domain')}`,
-        password: 'admin123'
+        password: process.env.ADMIN_PASSWORD
       }
     })
       .expect('status', 200)

@@ -2,9 +2,9 @@ describe('/#/basket', () => {
   describe('as wurstbrot', () => {
     beforeEach(() => {
       cy.login({
-        email: 'wurstbrot',
-        password: 'EinBelegtesBrotMitSchinkenSCHINKEN!',
-        totpSecret: 'IFTXE3SPOEYVURT2MRYGI52TKJ4HC3KH'
+        email: Cypress.env('wurstbrotEmail'),
+        password: Cypress.env('wurstbrotPassword'),
+        totpSecret: Cypress.env('wurstbrotTotpSecret')
       })
     })
 
@@ -16,8 +16,8 @@ describe('/#/basket', () => {
   describe('as amy', () => {
     beforeEach(() => {
       cy.login({
-        email: 'amy',
-        password: 'K1f.....................'
+        email: Cypress.env('amyEmail'),
+        password: Cypress.env('amyPassword')
       })
     })
 

@@ -5,7 +5,7 @@
 
 import { type IncomingMessage } from 'node:http'
 import * as frisby from 'frisby'
-import http from 'node:http'
+import https from 'node:https'
 import config from 'config'
 
 import { type Product } from '../../data/types'
@@ -66,7 +66,7 @@ describe('/rest/products/reviews', () => {
   let reviewId: string
 
   beforeAll((done) => {
-    http.get(`${REST_URL}/products/1/reviews`, (res: IncomingMessage) => {
+    https.get(`${REST_URL}/products/1/reviews`, (res: IncomingMessage) => {
       let body = ''
 
       res.on('data', (chunk: string) => {
@@ -109,7 +109,7 @@ describe('/rest/products/reviews', () => {
       headers: jsonHeader,
       body: {
         email: 'bjoern.kimminich@gmail.com',
-        password: 'bW9jLmxpYW1nQGhjaW5pbW1pay5ucmVvamI='
+        password: process.env.BJOERN_PASSWORD
       }
     })
       .expect('status', 200)
@@ -129,7 +129,7 @@ describe('/rest/products/reviews', () => {
       headers: jsonHeader,
       body: {
         email: 'bjoern.kimminich@gmail.com',
-        password: 'bW9jLmxpYW1nQGhjaW5pbW1pay5ucmVvamI='
+        password: process.env.BJOERN_PASSWORD
       }
     })
       .expect('status', 200)

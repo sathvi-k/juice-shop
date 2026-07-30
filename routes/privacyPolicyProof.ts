@@ -7,6 +7,12 @@ import path from 'node:path'
 import { type Request, type Response } from 'express'
 import { challenges } from '../data/datacache'
 import * as challengeUtils from '../lib/challengeUtils'
+import rateLimit from 'express-rate-limit'
+
+export const servePrivacyPolicyProofLimiter = rateLimit({
+  windowMs: 5 * 60 * 1000,
+  max: 100
+})
 
 export function servePrivacyPolicyProof () {
   return (req: Request, res: Response) => {

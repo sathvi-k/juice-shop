@@ -151,7 +151,7 @@ describe('/rest/2fa/verify', () => {
     const tmpTokenWurstbrot = jwt.sign({
       userId: 10,
       type: 'password_valid_needs_second_factor_token'
-    }, 'this_surly_isnt_the_right_key')
+    }, process.env.WRONG_JWT_KEY ?? '')
 
     const totpToken = otplib.authenticator.generate('IFTXE3SPOEYVURT2MRYGI52TKJ4HC3KH')
 
@@ -171,8 +171,8 @@ describe('/rest/2fa/status', () => {
   it('GET should indicate 2fa is setup for 2fa enabled users', async () => {
     const { token } = await login({
       email: `wurstbrot@${config.get<string>('application.domain')}`,
-      password: 'EinBelegtesBrotMitSchinkenSCHINKEN!',
-      totpSecret: 'IFTXE3SPOEYVURT2MRYGI52TKJ4HC3KH'
+      password: process.env.WURSTBROT_PASSWORD ?? '',
+      totpSecret: process.env.WURSTBROT_TOTP_SECRET ?? ''
     })
 
     // @ts-expect-error FIXME promise return handling broken
@@ -197,7 +197,7 @@ describe('/rest/2fa/status', () => {
   it('GET should indicate 2fa is not setup for users with 2fa disabled', async () => {
     const { token } = await login({
       email: `J12934@${config.get<string>('application.domain')}`,
-      password: '0Y8rMnww$*9VFYE§59-!Fg1L6t&6lB'
+      password: process.env.J12934_PASSWORD as string
     })
 
     // @ts-expect-error FIXME promise return handling broken
@@ -235,7 +235,7 @@ describe('/rest/2fa/setup', () => {
     const email = 'fooooo1@bar.com'
     const password = '123456'
 
-    const secret = 'ASDVAJSDUASZGDIADBJS'
+    const secret = process.env.TOTP_TEST_SECRET ?? ''
 
     await register({ email, password })
     const { token } = await login({ email, password })
@@ -281,7 +281,7 @@ describe('/rest/2fa/setup', () => {
     const email = 'fooooo2@bar.com'
     const password = '123456'
 
-    const secret = 'ASDVAJSDUASZGDIADBJS'
+    const secret = process.env.TOTP_TEST_SECRET ?? ''
 
     await register({ email, password })
     const { token } = await login({ email, password })
@@ -310,7 +310,7 @@ describe('/rest/2fa/setup', () => {
     const email = 'fooooo3@bar.com'
     const password = '123456'
 
-    const secret = 'ASDVAJSDUASZGDIADBJS'
+    const secret = process.env.TOTP_TEST_SECRET ?? ''
 
     await register({ email, password })
     const { token } = await login({ email, password })
@@ -339,7 +339,7 @@ describe('/rest/2fa/setup', () => {
     const email = 'fooooo4@bar.com'
     const password = '123456'
 
-    const secret = 'ASDVAJSDUASZGDIADBJS'
+    const secret = process.env.TOTP_TEST_SECRET ?? ''
 
     await register({ email, password })
     const { token } = await login({ email, password })
@@ -366,8 +366,8 @@ describe('/rest/2fa/setup', () => {
 
   it('POST should fail if the account has already set up 2fa', async () => {
     const email = `wurstbrot@${config.get<string>('application.domain')}`
-    const password = 'EinBelegtesBrotMitSchinkenSCHINKEN!'
-    const totpSecret = 'IFTXE3SPOEYVURT2MRYGI52TKJ4HC3KH'
+    const password = process.env.WURSTBROT_PASSWORD ?? ''
+    const totpSecret = process.env.WURSTBROT_TOTP_SECRET
 
     const { token } = await login({ email, password, totpSecret })
 
@@ -396,7 +396,7 @@ describe('/rest/2fa/disable', () => {
   it('POST should be able to disable 2fa for account with 2fa enabled', async () => {
     const email = 'fooooodisable1@bar.com'
     const password = '123456'
-    const totpSecret = 'ASDVAJSDUASZGDIADBJS'
+    const totpSecret = process.env.TOTP_SECRET ?? ''
 
     await register({ email, password, totpSecret })
     const { token } = await login({ email, password, totpSecret })
@@ -433,7 +433,7 @@ describe('/rest/2fa/disable', () => {
   it('POST should not be possible to disable 2fa without the correct password', async () => {
     const email = 'fooooodisable1@bar.com'
     const password = '123456'
-    const totpSecret = 'ASDVAJSDUASZGDIADBJS'
+    const totpSecret = process.env.TOTP_SECRET ?? ''
 
     await register({ email, password, totpSecret })
     const { token } = await login({ email, password, totpSecret })

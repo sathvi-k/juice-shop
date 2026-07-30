@@ -37,9 +37,15 @@ export function getUserProfile () {
       next(new Error('Blocked illegal activity by ' + req.socket.remoteAddress)); return
     }
 
+    const rawUserId = loggedInUser.data.id
+    const userId = Number.parseInt(String(rawUserId), 10)
+    if (!Number.isInteger(userId) || userId <= 0 || String(userId) !== String(rawUserId)) {
+      next(new Error('Blocked illegal activity by ' + req.socket.remoteAddress))
+      return
+    }
     let user: UserModel | null
     try {
-      user = await UserModel.findByPk(loggedInUser.data.id)
+      user = await UserModel.findByPk(userId)
     } catch (error) {
       next(error)
       return

@@ -33,7 +33,7 @@ describe('/submitKey', () => {
 
   it('POST public wallet key in request body gets rejected as such', () => {
     return frisby.post(REST_URL + '/submitKey', {
-      privateKey: '0x02c7a2a93289c9fbda5990bac6596993e9bb0a8d3f178175a80b7cfd983983f506'
+      privateKey: process.env.PUBLIC_WALLET_KEY
     })
       .expect('status', 401)
       .expect('header', 'content-type', /application\/json/)
@@ -57,7 +57,7 @@ describe('/submitKey', () => {
 
   it('POST private key in request body gets accepted', () => {
     return frisby.post(REST_URL + '/submitKey', {
-      privateKey: '0x5bcc3e9d38baa06e7bfaab80ae5957bbe8ef059e640311d7d6d465e6bc948e3e'
+      privateKey: process.env.PRIVATE_WALLET_KEY
     })
       .expect('status', 200)
       .expect('header', 'content-type', /application\/json/)

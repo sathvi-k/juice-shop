@@ -21,7 +21,8 @@ describe('/#/privacy-security/data-export', () => {
     })
 
     it('should be possible to steal admin user data by causing email clash during export', () => {
-      cy.login({ email: 'admun', password: 'admun123' })
+      const creds = { email: Cypress.env('admunEmail'), password: Cypress.env('admunPassword') }
+      cy.login(creds)
 
       cy.visit('/#/privacy-security/data-export')
       cy.get('#formatControl').contains('JSON').click()

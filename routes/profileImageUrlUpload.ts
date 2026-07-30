@@ -12,11 +12,17 @@ import * as security from '../lib/insecurity'
 import { UserModel } from '../models/user'
 import * as utils from '../lib/utils'
 import logger from '../lib/logger'
+import rateLimit from 'express-rate-limit'
+
+export const profileImageUrlUploadLimiter = rateLimit({
+  windowMs: 10 * 60 * 1000,
+  max: 100
+})
 
 export function profileImageUrlUpload () {
   return async (req: Request, res: Response, next: NextFunction) => {
     if (req.body.imageUrl !== undefined) {
-      const url = req.body.imageUrl
+      const url = String(req.body.imageUrl)
       if (url.match(/(.)*solve\/challenges\/server-side(.)*/) !== null) req.app.locals.abused_ssrf_bug = true
       const loggedInUser = security.authenticatedUsers.get(req.cookies.token)
       if (loggedInUser) {
@@ -25,8 +31,14 @@ export function profileImageUrlUpload () {
           if (!response.ok || !response.body) {
             throw new Error('url returned a non-OK status code or an empty body')
           }
-          const ext = ['jpg', 'jpeg', 'png', 'svg', 'gif'].includes(url.split('.').slice(-1)[0].toLowerCase()) ? url.split('.').slice(-1)[0].toLowerCase() : 'jpg'
-          const fileStream = fs.createWriteStream(`frontend/dist/frontend/assets/public/images/uploads/${loggedInUser.data.id}.${ext}`, { flags: 'w' })
+          const allowedExts: Record<string, string> = { jpg: 'jpg', jpeg: 'jpeg', png: 'png', svg: 'svg', gif: 'gif' }
+          const rawExt = url.split('.').slice(-1)[0].toLowerCase()
+          const safeExt: string = Object.prototype.hasOwnProperty.call(allowedExts, rawExt) ? allowedExts[rawExt] : 'jpg'
+          const safeUserId = parseInt(String(loggedInUser.data.id), 10)
+          if (isNaN(safeUserId)) { throw new Error('Invalid user id') }
+          const safePath = `frontend/dist/frontend/assets/public/images/uploads/${safeUserId}.${safeExt}`
+          const fileStream = fs.createWriteStream(safePath, { flags: 'w' })
+          const ext = safeExt
           await finished(Readable.fromWeb(response.body as any).pipe(fileStream))
           await UserModel.findByPk(loggedInUser.data.id).then(async (user: UserModel | null) => { return await user?.update({ profileImage: `/assets/public/images/uploads/${loggedInUser.data.id}.${ext}` }) }).catch((error: Error) => { next(error) })
         } catch (error) {

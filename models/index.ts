@@ -27,7 +27,7 @@ import { WalletModelInit } from './wallet'
 import { Sequelize, Transaction } from 'sequelize'
 
 /* jslint node: true */
-const sequelize = new Sequelize('database', 'username', 'password', {
+const sequelize = new Sequelize('database', 'username', process.env.DB_PASSWORD, {
   dialect: 'sqlite',
   retry: {
     match: [/SQLITE_BUSY/],

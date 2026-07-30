@@ -109,7 +109,7 @@ describe('/rest/user/data-export', () => {
       headers: jsonHeader,
       body: {
         email: 'amy@' + config.get<string>('application.domain'),
-        password: 'K1f.....................'
+        password: process.env.AMY_PASSWORD
       }
     })
       .expect('status', 200)
@@ -231,7 +231,7 @@ describe('/rest/user/data-export', () => {
       headers: jsonHeader,
       body: {
         email: 'amy@' + config.get<string>('application.domain'),
-        password: 'K1f.....................'
+        password: process.env.AMY_PASSWORD
       }
     })
       .expect('status', 200)

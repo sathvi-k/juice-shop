@@ -105,7 +105,7 @@ describe('/chatbot', () => {
       }
       const { token } = await login({
         email: 'bjoern.kimminich@gmail.com',
-        password: 'bW9jLmxpYW1nQGhjaW5pbW1pay5ucmVvamI='
+        password: process.env.KIMMINICH_PASSWORD ?? ''
       })
 
       bot.addUser('1337', 'bkimminich')

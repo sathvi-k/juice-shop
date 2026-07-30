@@ -8,9 +8,9 @@ import { type Request, type Response, type NextFunction } from 'express'
 
 export function serveKeyFiles () {
   return ({ params }: Request, res: Response, next: NextFunction) => {
-    const file = params.file
+    const file = path.basename(params.file)
 
-    if (!file.includes('/')) {
+    if (!file.includes('/') && !file.includes('..')) {
       res.sendFile(path.resolve('encryptionkeys/', file))
     } else {
       res.status(403)

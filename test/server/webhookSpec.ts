@@ -5,7 +5,8 @@
 
 import * as webhook from '../../lib/webhook'
 import { type AddressInfo } from 'node:net'
-import http from 'node:http'
+import https from 'node:https'
+import fs from 'node:fs'
 import chai from 'chai'
 const expect = chai.expect
 
@@ -35,7 +36,11 @@ describe('webhook', () => {
     })
 
     it('submits POST with payload to existing URL', async () => {
-      const server = http.createServer((req, res) => {
+      const httpsOptions = {
+        key: fs.readFileSync('key.pem'),
+        cert: fs.readFileSync('cert.pem')
+      }
+      const server = https.createServer(httpsOptions, (req, res) => {
         res.statusCode = 200
         res.end('OK')
       })
@@ -43,7 +48,7 @@ describe('webhook', () => {
       await new Promise<void>((resolve) => server.listen(0, resolve))
 
       const port = (server.address() as AddressInfo)?.port
-      const url = `http://localhost:${port}`
+      const url = `https://localhost:${port}`
 
       try {
         await webhook.notify(challenge, 0, 0, 0, url)

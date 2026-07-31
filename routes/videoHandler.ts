@@ -13,8 +13,14 @@ import * as challengeUtils from '../lib/challengeUtils'
 import { themes } from '../views/themes/themes'
 import { challenges } from '../data/datacache'
 import * as utils from '../lib/utils'
+import rateLimit from 'express-rate-limit'
 
 const entities = new Entities()
+
+const promotionVideoLimiter = rateLimit({
+  windowMs: 5 * 60 * 1000,
+  max: 100
+})
 
 export const getVideo = () => {
   return (req: Request, res: Response) => {
@@ -50,6 +56,7 @@ export const getVideo = () => {
 
 export const promotionVideo = () => {
   return (req: Request, res: Response) => {
+    promotionVideoLimiter(req, res, () => {
     fs.readFile('views/promotionVideo.pug', function (err, buf) {
       if (err != null) throw err
       let template = buf.toString()
@@ -70,6 +77,7 @@ export const promotionVideo = () => {
       let compiledTemplate = fn()
       compiledTemplate = compiledTemplate.replace('<script id="subtitle"></script>', '<script id="subtitle" type="text/vtt" data-label="English" data-lang="en">' + subs + '</script>')
       res.send(compiledTemplate)
+    })
     })
   }
   function favicon () {

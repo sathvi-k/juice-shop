@@ -30,7 +30,7 @@ export function servePublicFiles () {
       challengeUtils.solveIf(challenges.directoryListingChallenge, () => { return file.toLowerCase() === 'acquisitions.md' })
       verifySuccessfulPoisonNullByteExploit(file)
 
-      res.sendFile(path.resolve('ftp/', file))
+      res.sendFile(path.resolve('ftp/', path.basename(file)))
     } else {
       res.status(403)
       next(new Error('Only .md and .pdf files are allowed!'))

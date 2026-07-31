@@ -6,6 +6,12 @@
 import locales from '../data/static/locales.json'
 import fs from 'node:fs'
 import { type Request, type Response, type NextFunction } from 'express'
+import rateLimit from 'express-rate-limit'
+
+export const languageListRateLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 100
+})
 
 export function getLanguageList () { // TODO Refactor and extend to also load backend translations from /i18n/*json and calculate joint percentage/gauge
   return (req: Request, res: Response, next: NextFunction) => {

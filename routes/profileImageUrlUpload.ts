@@ -12,6 +12,12 @@ import * as security from '../lib/insecurity'
 import { UserModel } from '../models/user'
 import * as utils from '../lib/utils'
 import logger from '../lib/logger'
+import rateLimit from 'express-rate-limit'
+
+export const profileImageUrlUploadLimiter = rateLimit({
+  windowMs: 10 * 60 * 1000,
+  max: 100
+})
 
 export function profileImageUrlUpload () {
   return async (req: Request, res: Response, next: NextFunction) => {
@@ -25,8 +31,18 @@ export function profileImageUrlUpload () {
           if (!response.ok || !response.body) {
             throw new Error('url returned a non-OK status code or an empty body')
           }
-          const ext = ['jpg', 'jpeg', 'png', 'svg', 'gif'].includes(url.split('.').slice(-1)[0].toLowerCase()) ? url.split('.').slice(-1)[0].toLowerCase() : 'jpg'
-          const fileStream = fs.createWriteStream(`frontend/dist/frontend/assets/public/images/uploads/${loggedInUser.data.id}.${ext}`, { flags: 'w' })
+          const rawExt = url.split('.').slice(-1)[0].toLowerCase()
+          let safeExt: 'jpg' | 'jpeg' | 'png' | 'svg' | 'gif' = 'jpg'
+          if (rawExt === 'jpeg') safeExt = 'jpeg'
+          else if (rawExt === 'png') safeExt = 'png'
+          else if (rawExt === 'svg') safeExt = 'svg'
+          else if (rawExt === 'gif') safeExt = 'gif'
+          const ext = safeExt
+          const safeId = parseInt(String(loggedInUser.data.id), 10)
+          if (!Number.isInteger(safeId) || safeId < 0) {
+            throw new Error('Invalid user id')
+          }
+          const fileStream = fs.createWriteStream(`frontend/dist/frontend/assets/public/images/uploads/${safeId}.${safeExt}`, { flags: 'w' })
           await finished(Readable.fromWeb(response.body as any).pipe(fileStream))
           await UserModel.findByPk(loggedInUser.data.id).then(async (user: UserModel | null) => { return await user?.update({ profileImage: `/assets/public/images/uploads/${loggedInUser.data.id}.${ext}` }) }).catch((error: Error) => { next(error) })
         } catch (error) {

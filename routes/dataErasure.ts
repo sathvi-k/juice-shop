@@ -4,6 +4,12 @@
  */
 import express, { type NextFunction, type Request, type Response } from 'express'
 import path from 'node:path'
+import rateLimit from 'express-rate-limit'
+
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100
+})
 
 import { SecurityQuestionModel } from '../models/securityQuestion'
 import { PrivacyRequestModel } from '../models/privacyRequests'
@@ -15,7 +21,7 @@ import { UserModel } from '../models/user'
 
 const router = express.Router()
 
-router.get('/', async (req: Request, res: Response, next: NextFunction) => {
+router.get('/', apiLimiter, async (req: Request, res: Response, next: NextFunction) => {
   const loggedInUser = security.authenticatedUsers.get(req.cookies.token)
   if (!loggedInUser) {
     next(new Error('Blocked illegal activity by ' + req.socket.remoteAddress))
